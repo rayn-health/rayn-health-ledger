@@ -1,0 +1,8 @@
+{
+  "appId": "com.raynhealth.app",
+  "appName": "RayN Health",
+  "webDir": "frontend",
+  "server": {
+    "androidScheme": "https"
+  }
+}
