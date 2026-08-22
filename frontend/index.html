@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#14211B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RayN Health">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<title>RayN Health — Daily Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14211B;--panel:#1E2E27;--panel-2:#24362D;--bone:#ECE7D8;--bone-dim:#AFA894;--brass:#C99A4B;--sage:#8FAE86;--rust:#C2603F;--line:rgba(236,231,216,.12)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--bone);font-family:'IBM Plex Sans',sans-serif}
+body{min-height:100vh;display:flex;justify-content:center}
+.wrap{width:100%;max-width:480px;padding:20px 16px 60px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim)}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:28px;margin:2px 0 0}
+.datebar{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.datebar button{background:none;border:1px solid var(--line);color:var(--bone-dim);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer}
+.datebar input[type=date]{background:transparent;border:none;color:var(--bone);font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center}
+.datebar input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.8)}
+.gauge-card{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px 20px;display:flex;align-items:center;gap:20px}
+.gauge{position:relative;width:118px;height:118px;flex-shrink:0}.gauge svg{transform:rotate(-90deg)}
+.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600}.gauge-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-dim);margin-top:2px}
+.gauge-side{flex:1}.gauge-row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.gauge-row:last-child{border-bottom:none}.gauge-row span:first-child{color:var(--bone-dim)}
+.target-edit{display:flex;align-items:center;gap:6px;margin-top:8px}.target-edit input{width:64px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--bone);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:4px 6px}
+.target-edit button{background:none;border:none;color:var(--brass);font-size:11px;text-decoration:underline;cursor:pointer;padding:0}
+.add-row{display:flex;gap:10px;margin-top:20px}.add-btn{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 10px;color:var(--bone);font-size:13px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}.add-btn:active{background:var(--panel-2)}.add-btn .ico{font-size:20px}
+.panel{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:none}.panel.open{display:block}
+.panel label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--bone-dim);display:block;margin-bottom:6px}
+.panel textarea,.panel input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;color:var(--bone);font-size:14px;padding:10px;resize:none}
+.panel .actions{display:flex;gap:8px;margin-top:10px}.primary-btn{background:var(--brass);color:var(--ink);border:none;border-radius:8px;padding:10px 16px;font-weight:600;font-size:13px;cursor:pointer}.ghost-btn{background:none;border:1px solid var(--line);color:var(--bone-dim);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer}
+.preview-img{width:100%;border-radius:10px;margin-bottom:10px;max-height:220px;object-fit:cover}.status{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass);margin-top:8px}.status.err{color:var(--rust)}
+.result-card{margin-top:10px;background:var(--panel-2);border:1px dashed var(--line);border-radius:10px;padding:12px}.result-card .name{font-weight:600;font-size:14px;margin-bottom:6px}
+.macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:center}.macro-grid div span{display:block;color:var(--bone-dim);font-size:9px;text-transform:uppercase;margin-top:2px}
+.log-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone-dim);margin:26px 0 10px}
+.entry{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}.entry .info .name{font-weight:500;font-size:14px}.entry .info .macros{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--bone-dim);margin-top:2px}.entry .cal{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;white-space:nowrap}.entry .del{background:none;border:none;color:var(--bone-dim);font-size:16px;cursor:pointer;padding:4px}.empty{color:var(--bone-dim);font-size:13px;text-align:center;padding:20px 0;font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="eyebrow">RayN Health</div><h1>Daily Intake</h1>
+<div class="datebar"><button id="prevDay">‹</button><input type="date" id="dateInput"><button id="nextDay">›</button></div>
+<div class="gauge-card"><div class="gauge"><svg width="118" height="118" viewBox="0 0 118 118"><circle cx="59" cy="59" r="50" fill="none" stroke="var(--panel-2)" stroke-width="10"/><circle id="gaugeFill" cx="59" cy="59" r="50" fill="none" stroke="var(--sage)" stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/></svg><div class="gauge-center"><div class="gauge-num" id="gaugeNum">0</div><div class="gauge-label" id="gaugeLabel">remaining</div></div></div>
+<div class="gauge-side"><div class="gauge-row"><span>Consumed</span><span id="rowConsumed">0 kcal</span></div><div class="gauge-row"><span>Target</span><span id="rowTarget">— kcal</span></div><div class="gauge-row"><span>Entries</span><span id="rowCount">0</span></div><div class="target-edit"><input type="number" id="targetInput" placeholder="kcal"><button id="saveTarget">set target</button></div></div></div>
+<div class="add-row"><button class="add-btn" id="btnDescribe"><span class="ico">✎</span>Describe it</button><button class="add-btn" id="btnPhoto"><span class="ico">◎</span>Snap a photo</button></div>
+<div class="panel" id="describePanel"><label>What did you eat?</label><textarea id="describeText" rows="2" placeholder="e.g. two eggs, toast with butter, black coffee"></textarea><div class="actions"><button class="primary-btn" id="describeAnalyze">Estimate</button><button class="ghost-btn" id="describeCancel">Cancel</button></div><div id="describeStatus"></div><div id="describeResult"></div></div>
+<div class="panel" id="photoPanel"><label>Photo of your meal</label><input type="file" accept="image/*" capture="environment" id="photoInput" style="display:none"><button class="ghost-btn" id="photoTrigger" style="width:100%;">Open camera</button><img id="photoPreview" class="preview-img" style="display:none;"><div class="actions" id="photoActions" style="display:none;"><button class="primary-btn" id="photoAnalyze">Estimate</button><button class="ghost-btn" id="photoCancel">Cancel</button></div><div id="photoStatus"></div><div id="photoResult"></div></div>
+<div class="log-title">Today's entries</div><div id="entryList"></div>
+</div>
+<script>
+const DEFAULT_TARGET=1800;let currentDate=new Date().toLocaleDateString('en-CA');let entries=[];let target=DEFAULT_TARGET;let pendingPhotoBase64=null;
+const $=id=>document.getElementById(id);$('dateInput').value=currentDate;
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function loadSettings(){try{const s=JSON.parse(localStorage.getItem('raynhealth:settings')||'{}');if(Number.isFinite(s.target)&&s.target>0)target=s.target}catch(e){}$('targetInput').value=target;$('rowTarget').textContent=target+' kcal'}
+function saveSettings(){localStorage.setItem('raynhealth:settings',JSON.stringify({target}))}
+function loadEntries(){try{entries=JSON.parse(localStorage.getItem('raynhealth:entries:'+currentDate)||'[]');if(!Array.isArray(entries))entries=[]}catch(e){entries=[]}render()}
+function saveEntries(){localStorage.setItem('raynhealth:entries:'+currentDate,JSON.stringify(entries))}
+function render(){const consumed=entries.reduce((a,e)=>a+(Number(e.calories)||0),0),remaining=target-consumed;$('rowConsumed').textContent=consumed+' kcal';$('rowTarget').textContent=target+' kcal';$('rowCount').textContent=entries.length;const pct=Math.max(0,Math.min(1,consumed/target)),c=314;$('gaugeFill').setAttribute('stroke-dashoffset',c-pct*c);$('gaugeFill').setAttribute('stroke',consumed>target?'var(--rust)':'var(--sage)');$('gaugeNum').textContent=Math.abs(Math.round(remaining));$('gaugeLabel').textContent=remaining>=0?'remaining':'over target';const list=$('entryList');list.innerHTML='';if(!entries.length){list.innerHTML='<div class="empty">Nothing logged yet — describe a meal or snap a photo.</div>';return}entries.slice().reverse().forEach(e=>{const d=document.createElement('div');d.className='entry';d.innerHTML='<div class="info"><div class="name">'+escapeHTML(e.name)+'</div><div class="macros">P '+(e.protein_g||0)+'g · C '+(e.carbs_g||0)+'g · F '+(e.fat_g||0)+'g</div></div><div class="cal">'+Number(e.calories)||0+'</div><button class="del" aria-label="Delete entry" data-id="'+escapeHTML(e.id)+'">✕</button>';list.appendChild(d)});list.querySelectorAll('.del').forEach(b=>b.onclick=()=>{entries=entries.filter(e=>e.id!==b.dataset.id);saveEntries();render()})}
+async function estimateNutrition({text,imageBase64}){const endpoint='/api/estimate';let content;if(imageBase64)content={imageBase64};else content={text};const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(content)});if(!r.ok)throw new Error('API error');const data=await r.json();return data}
+function resultHTML(r,id){return '<div class="result-card"><div class="name">'+escapeHTML(r.name)+'</div><div class="macro-grid"><div>'+Number(r.calories)+'<span>kcal</span></div><div>'+Number(r.protein_g)+'g<span>protein</span></div><div>'+Number(r.carbs_g)+'g<span>carbs</span></div><div>'+Number(r.fat_g)+'g<span>fat</span></div></div></div><div class="actions"><button class="primary-btn" id="'+id+'">Log it</button></div>'}
+$('btnDescribe').onclick=()=>{$('describePanel').classList.add('open');$('photoPanel').classList.remove('open')};
+$('describeCancel').onclick=()=>{$('describePanel').classList.remove('open');$('describeText').value='';$('describeResult').innerHTML='';$('describeStatus').innerHTML=''};
+let describePending=null;$('describeAnalyze').onclick=async()=>{const txt=$('describeText').value.trim();if(!txt)return;$('describeStatus').textContent='Estimating…';$('describeStatus').className='status';try{describePending=await estimateNutrition({text:txt});$('describeStatus').textContent='';$('describeResult').innerHTML=resultHTML(describePending,'describeLog');$('describeLog').onclick=()=>{entries.push({id:Date.now().toString(),...describePending});saveEntries();render();$('describeCancel').onclick()}}catch(e){$('describeStatus').textContent="Couldn't get an estimate — check the API connection and try again.";$('describeStatus').className='status err'}};
+$('btnPhoto').onclick=()=>{$('photoPanel').classList.add('open');$('describePanel').classList.remove('open')};
+$('photoCancel').onclick=()=>{$('photoPanel').classList.remove('open');$('photoPreview').style.display='none';$('photoActions').style.display='none';$('photoResult').innerHTML='';$('photoStatus').innerHTML='';pendingPhotoBase64=null;$('photoInput').value=''};
+$('photoTrigger').onclick=()=>$('photoInput').click();
+$('photoInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{pendingPhotoBase64=reader.result.split(',')[1];$('photoPreview').src=reader.result;$('photoPreview').style.display='block';$('photoActions').style.display='flex'};reader.readAsDataURL(f)};
+let photoPending=null;$('photoAnalyze').onclick=async()=>{if(!pendingPhotoBase64)return;$('photoStatus').textContent='Estimating…';$('photoStatus').className='status';try{photoPending=await estimateNutrition({imageBase64:pendingPhotoBase64});$('photoStatus').textContent='';$('photoResult').innerHTML=resultHTML(photoPending,'photoLog');$('photoLog').onclick=()=>{entries.push({id:Date.now().toString(),...photoPending});saveEntries();render();$('photoCancel').onclick()}}catch(e){$('photoStatus').textContent="Couldn't read that photo — check the API connection and try again.";$('photoStatus').className='status err'}};
+$('saveTarget').onclick=()=>{const v=parseInt($('targetInput').value,10);if(!v||v<=0)return;target=v;saveSettings();render()};
+function shiftDate(days){const d=new Date(currentDate+'T00:00:00');d.setDate(d.getDate()+days);currentDate=d.toLocaleDateString('en-CA');$('dateInput').value=currentDate;loadEntries()}
+$('prevDay').onclick=()=>shiftDate(-1);$('nextDay').onclick=()=>shiftDate(1);$('dateInput').onchange=()=>{currentDate=$('dateInput').value;loadEntries()};
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error));
+loadSettings();loadEntries();
+</script>
+</body></html>
