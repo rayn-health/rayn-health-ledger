@@ -48,7 +48,13 @@ jobs:
           test -f android/settings.gradle
           test -f android/app/build.gradle
           chmod +x android/gradlew
-
+      - name: Show Android debug SHA-1
+        run: |
+          keytool -list -v \
+            -keystore "$HOME/.android/debug.keystore" \
+            -alias androiddebugkey \
+            -storepass android \
+            -keypass android | grep "SHA1:"
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon --stacktrace
