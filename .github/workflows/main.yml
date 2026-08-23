@@ -48,13 +48,7 @@ jobs:
           test -f android/settings.gradle
           test -f android/app/build.gradle
           chmod +x android/gradlew
-      - name: Show Android debug SHA-1
-        run: |
-          keytool -list -v \
-            -keystore "$HOME/.android/debug.keystore" \
-            -alias androiddebugkey \
-            -storepass android \
-            -keypass android | grep "SHA1:"
+      
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon --stacktrace
@@ -66,3 +60,16 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Show Android debug SHA-1
+        working-directory: android
+        run: ./gradlew signingReport --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ledger-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
